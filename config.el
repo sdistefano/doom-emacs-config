@@ -191,3 +191,15 @@
 
 
 ;; ("C-l". google-translate-paragraphs-insert))
+
+(setq company-backends
+  '(
+    (
+     company-files
+     company-dabbrev
+     company-keywords
+     company-capf
+     company-yasnippet
+     )
+    (company-abbrev company-dabbrev)
+    ))
