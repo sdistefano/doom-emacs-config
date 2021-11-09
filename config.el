@@ -53,6 +53,7 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+
 (if IS-MAC
 	(autoload 'ispell-get-word' "ispell")
 )
@@ -180,7 +181,7 @@
 ("C-l". google-translate-at-point2))
 
 (define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point2)
-(define-key org-mode-map (kbd "C-l") 'google-translate-at-point2)
+;;(define-key org-mode-map (kbd "C-l") 'google-translate-at-point2)
 (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
 (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
 
