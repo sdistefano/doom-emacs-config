@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
+(setq user-full-name "Silvio Di Stefano"
+      user-mail-address "sdistefano@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -53,7 +53,9 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(autoload 'ispell-get-word' "ispell")
+(if IS-MAC
+	(autoload 'ispell-get-word' "ispell")
+)
 
 ;; (defun lookup-word (word)
 ;;   (interactive (list (save-excursion (car (ispell-get-word nil)))))
@@ -81,8 +83,27 @@
 ;;   :config
 ;;   (org-super-agenda-mode)
 ;; )
-(define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
-(define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
+(setq projectile-project-search-path '("~/proj/"))
+;; (define-key evil-insert-state-map (kbd "C-c C-c") 'evil-normal-state)
+;; (define-key evil-normal-state-map (kbd "C-c C-c") 'evil-normal-state)
+
+(defun shell-command-on-region-to-string (start end command)
+  (with-output-to-string
+    (shell-command-on-region start end command standard-output))
+)
+
+ (defun hiragana-region (&optional b e)
+   (setq str (current-kill 0))
+   (insert (shell-command-to-string (format "echo %s | kakasi -iutf8 -outf8 -JH -f" str)) )
+ )
+
+;; (defun hiragana-region (&optional b e)
+;;   (interactive "r")
+;;   (kill-new (shell-command-on-region-to-string b e "kakasi -iutf8 -outf8 -JH -f"))
+;; )
+
+(defvar *km:kanji->hiragana* "-JHf"
+  "Kakasi comman-line options for converting kanji to hiragana.")
 
 (defun select-current-line ()
   "Select the current line"
@@ -90,12 +111,17 @@
   (end-of-line) ; move to end of line
   (set-mark (line-beginning-position)))
 
+
 (setq mac-option-key-is-meta nil)
 (setq mac-command-key-is-meta t)
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier nil)
 (setq google-translate-default-source-language "en")
 (setq google-translate-default-target-language "de")
+(unless IS-MAC
+	(setq google-translate-default-target-language "ja")
+)
+
 ;; (setq google-translate-output-destination 'current-buffer)
 (setq google-translate-output-destination 'kill-ring)
 
@@ -115,28 +141,52 @@
         (if current-prefix-arg
         (google-translate-at-point)
         (google-translate-at-point-reverse)))
-(defun google-translate-at-point2()
-  ""
-  (interactive)
-    (select-current-line)
-    (google-translate-at-point)
-    (save-excursion
-    (end-of-line)
-    (open-line 1)
-    )
-    (forward-line)
-    (yank)
-    (open-line 1)
-    (forward-line 2)
-    (evil-org-open-below 1)
+(if IS-MAC
+	(defun google-translate-at-point2()
+	  ""
+	  (interactive)
+	    (select-current-line)
+	    (google-translate-at-point)
+	    (save-excursion
+	    (end-of-line)
+	    (open-line 1)
+	    )
+	    (forward-line)
+	    (yank)
+	    (open-line 1)
+	    (forward-line 2)
+	    (evil-org-open-below 1)
+	  )
+)
+(unless IS-MAC
+	(defun google-translate-at-point2()
+	  ""
+	  (interactive)
+	    (select-current-line)
+	    (google-translate-at-point)
+	    (save-excursion
+	    (end-of-line)
+	    (open-line 1)
+	    )
+	    (forward-line)
+	    (hiragana-region)
+	    (forward-line 2)
+	    (evil-org-open-below 1)
   )
-(defun my-google-translate()
-        "asd"
-        (google-translate-insert-translation)
-  )
+)
+
 :bind
 ("C-t". my-google-translate-at-point)
 ("C-l". google-translate-at-point2))
+
+(define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point2)
+(define-key org-mode-map (kbd "C-l") 'google-translate-at-point2)
+(define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
+(define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
+
+(with-eval-after-load 'org
+        (bind-key "C-l" 'google-translate-at-point2)
+)
 
 
 ;; ("C-l". google-translate-paragraphs-insert))
