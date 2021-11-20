@@ -52,3 +52,5 @@
 (package! org-super-agenda)
 (package! google-translate)
 (package! kanji-mode)
+(package! git-auto-commit-mode)
+(package! gist)
