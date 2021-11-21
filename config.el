@@ -205,4 +205,4 @@
     ))
 (setq gac-automatically-push-p t)
 (setq gac-automatically-add-new-files-p t)
-(setq gac-debouncer-interval 10)
+(setq gac-debounce-interval 10)
