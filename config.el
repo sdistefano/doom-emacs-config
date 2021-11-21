@@ -203,3 +203,4 @@
      )
     (company-abbrev company-dabbrev)
     ))
+(setq gac-automatically-push-p t)
