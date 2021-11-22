@@ -54,3 +54,4 @@
 (package! kanji-mode)
 (package! git-auto-commit-mode)
 (package! gist)
+(package! writegood-mode)
