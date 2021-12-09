@@ -55,3 +55,4 @@
 (package! git-auto-commit-mode)
 (package! gist)
 (package! writegood-mode)
+(package! sentence-highlight)
