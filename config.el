@@ -190,7 +190,7 @@
 (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
 
 (with-eval-after-load 'org
-        (bind-key "C-l" 'google-translate-at-point2)
+        (bind-key "C-l" 'google-translate-at-point)
 )
 
 
