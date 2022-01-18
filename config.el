@@ -176,10 +176,12 @@
         (defun google-translate-at-point-gl()
           ""
           (interactive)
-          (cond ((eq google-translate-default-target-language "ja") funcall 'google-translate-at-point-jp)
-          (t funcall 'google-translate-at-point-nr)
+          (cond ((eq google-translate-default-target-language "ja") google-translate-at-point-jp)
+          (t google-translate-at-point-nr)
           )
         )
+
+        test
 
 :bind
 ("C-t". google-translate-at-point)
