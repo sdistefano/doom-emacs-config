@@ -175,7 +175,7 @@
 
         (defun googgle-translate-at-point()
           ""
-          (funcall 'google-translate-at-point-nr)
+          (google-translate-at-point-nr)
           (cond ((eq google-translate-default-target-language "ja") funcall 'google-translate-at-point-jp)
           (t funcall 'google-translate-at-point-nr)
           )
@@ -191,7 +191,7 @@
 (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
 
 (with-eval-after-load 'org
-        (bind-key "C-l" 'google-translate-at-point-nr)
+        (bind-key "C-l" 'google-translate-at-point)
 )
 
 
