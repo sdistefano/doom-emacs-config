@@ -173,9 +173,10 @@
 	    (evil-org-open-below 1)
   )
 
-        (defun googgle-translate-at-point()
+        (defun googgle-translate-at-point-gl()
           ""
-          (google-translate-at-point-nr())
+          (interactive)
+          (google-translate-at-point-nr)
           (cond ((eq google-translate-default-target-language "ja") funcall 'google-translate-at-point-jp)
           (t funcall 'google-translate-at-point-nr)
           )
@@ -185,16 +186,14 @@
 ("C-t". google-translate-at-point)
 ("C-l". google-translate-at-point))
 
-(define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point)
+(define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point-gl)
 ;;(define-key org-mode-map (kbd "C-l") 'google-translate-at-point2)
 (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
 (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
 
 (with-eval-after-load 'org
-        (bind-key "C-l" 'google-translate-at-point)
+        (bind-key "C-l" 'google-translate-at-point-gl)
 )
-test
-
 
 ;; ("C-l". google-translate-paragraphs-insert))
 
