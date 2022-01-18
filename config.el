@@ -123,6 +123,7 @@
 	(setq google-translate-default-target-language "ja")
 )
 
+
 ;; (setq google-translate-output-destination 'current-buffer)
 (setq google-translate-output-destination 'kill-ring)
 
@@ -142,8 +143,7 @@
         (if current-prefix-arg
         (google-translate-at-point)
         (google-translate-at-point-reverse)))
-(if IS-MAC
-	(defun google-translate-at-point2()
+	(defun google-translate-at-point-nr()
 	  ""
 	  (interactive)
 	    (select-current-line)
@@ -158,9 +158,7 @@
 	    (forward-line 2)
 	    (evil-org-open-below 1)
 	  )
-)
-(unless IS-MAC
-	(defun google-translate-at-point2()
+	(defun google-translate-at-point-jp()
 	  ""
 	  (interactive)
 	    (select-current-line)
@@ -174,13 +172,19 @@
 	    (forward-line 2)
 	    (evil-org-open-below 1)
   )
-)
+
+        (defun googgle-translate-at-point()
+          ""
+          (cond ((eq google-translate-default-target-language "jp") google-translate-at-point-jp)
+          (t google-translate-at-point-nr)
+          )
+        )
 
 :bind
-("C-t". my-google-translate-at-point)
-("C-l". google-translate-at-point2))
+("C-t". google-translate-at-point)
+("C-l". google-translate-at-point))
 
-(define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point2)
+(define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point)
 ;;(define-key org-mode-map (kbd "C-l") 'google-translate-at-point2)
 (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
 (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
@@ -206,3 +210,14 @@
 (setq gac-automatically-push-p t)
 (setq gac-automatically-add-new-files-p t)
 (setq gac-debounce-interval 10)
+
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8) ;; also see `my-frame-config'
+(set-keyboard-coding-system 'utf-8)
+(set-locale-environment "en_US.UTF-8")
+(setq-default buffer-file-coding-system 'utf-8)
+(when (boundp 'default-buffer-file-coding-system) ;; obsolete since 23.2
+  (setq default-buffer-file-coding-system 'utf-8))
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
