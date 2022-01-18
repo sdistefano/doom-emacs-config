@@ -175,7 +175,7 @@
 
         (defun googgle-translate-at-point()
           ""
-          (cond ((eq google-translate-default-target-language "jp") google-translate-at-point-jp)
+          (cond ((eq google-translate-default-target-language "ja") google-translate-at-point-jp)
           (t google-translate-at-point-nr)
           )
         )
