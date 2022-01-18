@@ -173,7 +173,7 @@
 	    (evil-org-open-below 1)
   )
 
-        (defun googgle-translate-at-point-gl()
+        (defun google-translate-at-point-gl()
           ""
           (interactive)
           (google-translate-at-point-nr)
@@ -194,6 +194,8 @@
 (with-eval-after-load 'org
         (bind-key "C-l" 'google-translate-at-point-gl)
 )
+
+test
 
 ;; ("C-l". google-translate-paragraphs-insert))
 
