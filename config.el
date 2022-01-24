@@ -176,7 +176,7 @@
         (defun google-translate-at-point-gl()
           ""
           (interactive)
-          (cond ((eq (getq google-translate-default-target-language) "ja") (google-translate-at-point-jp))
+          (cond ((eq (getq 'google-translate-default-target-language) "ja") (google-translate-at-point-jp))
           (t (google-translate-at-point-nr))
           )
         )
