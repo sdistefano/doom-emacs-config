@@ -177,7 +177,7 @@
           ""
           (interactive)
           (cond ((eq (symbol-value 'google-translate-default-target-language) "ja") (google-translate-at-point-jp))
-          (t (google-translate-at-point-nr))
+                (t (google-translate-at-point-jp))
           )
         )
 
