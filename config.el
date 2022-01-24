@@ -182,8 +182,8 @@
         )
 
 :bind
-("C-t". google-translate-at-point)
-("C-l". google-translate-at-point))
+("C-t". google-translate-at-point-gl)
+("C-l". google-translate-at-point-gl))
 
 (define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point-gl)
 ;;(define-key org-mode-map (kbd "C-l") 'google-translate-at-point2)
@@ -193,8 +193,6 @@
 (with-eval-after-load 'org
         (bind-key "C-l" 'google-translate-at-point-gl)
 )
-
-test
 
 ;; ("C-l". google-translate-paragraphs-insert))
 
