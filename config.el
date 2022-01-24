@@ -176,7 +176,7 @@
         (defun google-translate-at-point-gl()
           ""
           (interactive)
-          (if (eq (google-translate-default-target-language) "ja") (google-translate-at-point-jp)
+          (if (eq google-translate-default-target-language "ja") (google-translate-at-point-jp)
                 (google-translate-at-point-nr)
 
           )
