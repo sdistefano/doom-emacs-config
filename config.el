@@ -137,65 +137,72 @@
 (google-translate-backend-method 'curl)
 :config
 (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
-(defun my-google-translate-at-point()
-        "reverse translate if prefix"
-        (interactive)
-        (if current-prefix-arg
+
+;; Helper function to handle translation and insertion
+(defun translate-and-insert-line ()
+  "Translate current line and insert result below"
+  (select-current-line)
+  (google-translate-at-point)
+  (save-excursion
+    (end-of-line)
+    (open-line 1))
+  (forward-line)
+  (yank)
+  (open-line 1)
+  (forward-line 2)
+  (evil-org-open-below 1))
+
+;; Main translation function that handles both Japanese and other languages
+(defun google-translate-at-point-gl ()
+  "Translate current line and handle Japanese specially"
+  (interactive)
+  (if (equal google-translate-default-target-language "ja")
+      (progn
+        (select-current-line)
         (google-translate-at-point)
-        (google-translate-at-point-reverse)))
-	(defun google-translate-at-point-nr()
-	  ""
-	  (interactive)
-	    (select-current-line)
-	    (google-translate-at-point)
-	    (save-excursion
-	    (end-of-line)
-	    (open-line 1)
-	    )
-	    (forward-line)
-	    (yank)
-	    (open-line 1)
-	    (forward-line 2)
-	    (evil-org-open-below 1)
-	  )
-	(defun google-translate-at-point-jp()
-	  ""
-	  (interactive)
-	    (select-current-line)
-	    (google-translate-at-point)
-	    (save-excursion
-	    (end-of-line)
-	    (open-line 1)
-	    )
-	    (forward-line)
-	    (hiragana-region)
-	    (forward-line 2)
-	    (evil-org-open-below 1)
-  )
+        (save-excursion
+          (end-of-line)
+          (open-line 1))
+        (forward-line)
+        (hiragana-region)
+        (forward-line 2)
+        (evil-org-open-below 1))
+    (translate-and-insert-line)))
 
-        (defun google-translate-at-point-gl()
-          ""
-          (interactive)
-          (if (equal google-translate-default-target-language "ja") (google-translate-at-point-jp)
-                (google-translate-at-point-nr)
+;; Reverse translation if prefix arg is provided
+(defun my-google-translate-at-point()
+  "Reverse translate if prefix"
+  (interactive)
+  (if current-prefix-arg
+      (google-translate-at-point)
+    (google-translate-at-point-reverse)))
 
-          )
-        )
+  (map! :map evil-normal-state-map
+    "C-k" nil)
+
+;; Reverse translation function that inserts above current line
+(defun google-translate-reverse-above ()
+  "Translate current line in reverse direction and insert result above"
+  (interactive)
+  (let ((google-translate-default-source-language 
+         google-translate-default-target-language)
+        (google-translate-default-target-language 
+         google-translate-default-source-language))
+    (select-current-line)
+    (google-translate-at-point)
+    (beginning-of-line)
+    (open-line 1)  ; Create one blank line above
+    (yank)         ; Insert translation
+    (forward-line 2))) ; Move down two lines after everything is done
 
 :bind
-("C-t". google-translate-at-point-gl)
-("C-l". google-translate-at-point-gl))
+("C-t" . google-translate-at-point-gl)
+("C-l" . google-translate-at-point-gl)
+("C-k" . google-translate-reverse-above))
 
-(define-key evil-insert-state-map (kbd "C-l") 'google-translate-at-point-gl)
-;;(define-key org-mode-map (kbd "C-l") 'google-translate-at-point2)
+
 (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
 (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
-
-(with-eval-after-load 'org
-        (bind-key "C-l" 'google-translate-at-point-gl)
-)
-
-;; ("C-l". google-translate-paragraphs-insert))
 
 (setq company-backends
   '(
@@ -222,3 +229,23 @@
   (setq default-buffer-file-coding-system 'utf-8))
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+;; Put this at the very end of your config.el
+(after! evil
+  ;; First remove all C-k bindings
+  (general-unbind "C-k")
+  (general-unbind evil-insert-state-map "C-k")
+  (general-unbind evil-normal-state-map "C-k")
+  (general-unbind evil-visual-state-map "C-k")
+  
+  ;; Then add our binding
+  (map! :gi "C-k" #'google-translate-reverse-above
+        :n  "C-k" #'google-translate-reverse-above
+        :v  "C-k" #'google-translate-reverse-above))
+
+;; Also ensure org-mode doesn't override it
+(after! org
+  (map! :map org-mode-map
+        :gi "C-k" #'google-translate-reverse-above
+        :n  "C-k" #'google-translate-reverse-above
+        :v  "C-k" #'google-translate-reverse-above))
